@@ -1,0 +1,27 @@
+{
+    "name": "atukai/at-admin-modules",
+    "description": "Check current git commit hash of installed ZF2 modules",
+    "type": "library",
+    "keywords": [
+        "zf2"
+    ],
+    "homepage": "https://github.com/atukai/AtAdminModules",
+    "authors": [
+        {
+            "name": "Alexander Tukai",
+            "email": "atukai@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "zendframework/zendframework": "2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "AtAdminModules": "src/"
+        },
+        "classmap": [
+            "./"
+        ]
+    }
+}
