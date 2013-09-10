@@ -13,7 +13,7 @@ return array(
                                     'route'    => '/modules',
                                     'defaults' => array(
                                         'controller' => 'AtAdminModules\Controller\Modules',
-                                        'action'     => 'modules',
+                                        'action'     => 'index',
                                     ),
                                 )
                             ),
@@ -34,19 +34,6 @@ return array(
         'invokables' => array (
             'at_admin_modules_service' => 'AtAdminModules\Service\Modules'
         )
-    ),
-
-    'navigation' => array(
-        'admin' => array(
-            'system' => array(
-                'pages' => array(
-                    'modules' => array(
-                        'label' => 'Modules',
-                        'route' => 'zfcadmin/system/modules',
-                    )
-                ),
-            ),
-        ),
     ),
 
     'view_manager' => array(

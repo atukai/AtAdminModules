@@ -2,10 +2,10 @@
 
 namespace AtAdminModules;
 
+use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\ModuleEvent;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\ModuleRouteListener;
 
 class Module implements AutoloaderProviderInterface
 {
@@ -20,9 +20,6 @@ class Module implements AutoloaderProviderInterface
     public function getAutoloaderConfig()
     {
         return array(
-            'Zend\Loader\ClassMapAutoloader' => array(
-                __DIR__ . '/autoload_classmap.php',
-            ),
             'Zend\Loader\StandardAutoloader' => array(
                 'namespaces' => array(
 		        // if we're in a namespace deeper than one level we need to fix the \ in the path
@@ -46,6 +43,38 @@ class Module implements AutoloaderProviderInterface
     public function init(ModuleManager $moduleManager)
     {
         $moduleManager->getEventManager()->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, array($this, 'onModulesLoaded'));
+    }
+
+    /**
+     * @param EventInterface $e
+     */
+    public function onBootstrap(EventInterface $e)
+    {
+        $application = $e->getApplication();
+        $sm = $application->getServiceManager();
+        $mm = $sm->get('ModuleManager');
+
+        $enabledModules = $mm->getModules();
+
+        if (in_array('AtAdmin', $enabledModules)) {
+            /** @var \Zend\Mvc\Router\Http\TreeRouteStack $router  */
+            $router = $application->getMvcEvent()->getRouter();
+            $adminNavigation = $sm->get('admin_navigation');
+
+            $systemMenuItem = $adminNavigation->findOneById('system-page');
+
+            if ($systemMenuItem) {
+        /** @todo How to dinamically add route? */
+
+                $systemMenuItem->addPage(
+                    array(
+                       'label'       => 'Modules',
+                        'route'       => 'zfcadmin/system/modules',
+                        'router'      => $router,
+                    )
+                );
+            }
+        }
     }
 
     /**

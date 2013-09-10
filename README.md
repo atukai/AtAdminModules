@@ -11,7 +11,7 @@ The missing ZF2 Admin module constructor.
 
 ## Installation
 
- 1. Add `"atukai/at-admin-modules": ">=0.1.0"` to your `composer.json` file and run `php composer.phar update`.
+ 1. Add `"atukai/at-admin-modules": "dev-master"` to your `composer.json` file and run `php composer.phar update`.
  2. Add `AtAdminModules` to your `config/application.config.php` file under the `modules` key after `AtAdmin`.
  3. Copy or create a symlink of public/css, public/js and public/images to your website root directory
 
