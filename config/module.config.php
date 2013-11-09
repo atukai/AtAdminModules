@@ -1,7 +1,8 @@
 <?php
 
 return array(
-    'router' => array(
+
+   'router' => array(
         'routes' => array(
             'zfcadmin' => array(
                 'child_routes' => array(
@@ -28,12 +29,6 @@ return array(
         'invokables' => array(
             'AtAdminModules\Controller\Modules' => 'AtAdminModules\Controller\ModulesController',
         ),
-    ),
-
-    'service_manager' => array(
-        'invokables' => array (
-            'at_admin_modules_service' => 'AtAdminModules\Service\Modules'
-        )
     ),
 
     'view_manager' => array(

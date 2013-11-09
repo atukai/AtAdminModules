@@ -2,7 +2,7 @@
 
 namespace AtAdminModules\Service;
 
-use AtAdminModules\Module;
+use Zend\ModuleManager\ModuleManager;
 
 class Modules
 {
@@ -13,16 +13,22 @@ class Modules
     const STATUS_GIT_NOT_TRACKED     = 'Module not tracked by git';
 
     /**
-     * @param string $moduleName
-     * @return bool
+     * @var ModuleManager
      */
-    public function isModuleLoaded($moduleName)
-    {
-        if (in_array((string) $moduleName, Module::getLoadedModules())) {
-            return true;
-        }
+    protected $moduleManager;
 
-        return false;
+    /**
+     * @var array
+     */
+    protected $loadedModules = array();
+
+    /**
+     * @param ModuleManager $moduleManager
+     */
+    public function __construct(ModuleManager $moduleManager)
+    {
+        $this->moduleManager = $moduleManager;
+        $this->loadedModules = $moduleManager->getLoadedModules(true);
     }
 
     /**
@@ -30,14 +36,14 @@ class Modules
      */
     public function getModuleInfo($name)
     {
-        $modules = Module::getLoadedModules();
-        $module = $modules[$name];
+        $module = $this->loadedModules[$name];
+
         $moduleInfo = array(
             'localHash'  => 'N/A',
             'remoteHash' => 'N/A',
             'version'    => 'N/A',
             'status'     => self::STATUS_GIT_NOT_TRACKED,
-        );;
+        );
 
         $class = new \ReflectionClass($module);
         $path = dirname($class->getFileName());

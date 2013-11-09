@@ -2,21 +2,24 @@
 
 namespace AtAdminModules;
 
+use AtAdminModules\Service\Modules;
 use Zend\EventManager\EventInterface;
-use Zend\ModuleManager\ModuleEvent;
+use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\DependencyIndicatorInterface;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
-use Zend\ModuleManager\ModuleManager;
+use Zend\ModuleManager\Feature\ServiceProviderInterface;
 
-class Module implements AutoloaderProviderInterface
+class Module implements
+    AutoloaderProviderInterface,
+    ConfigProviderInterface,
+    DependencyIndicatorInterface,
+    ServiceProviderInterface
 {
-    /**
-     * @var array
-     */
-    protected static $loadedModules = array();
+    public function getModuleDependencies()
+    {
+        return array('AtAdmin');
+    }
 
-    /**
-     * @return array
-     */
     public function getAutoloaderConfig()
     {
         return array(
@@ -29,20 +32,23 @@ class Module implements AutoloaderProviderInterface
         );
     }
 
-    /**
-     * @return mixed
-     */
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
     }
 
     /**
-     * @param \Zend\ModuleManager\ModuleManager $moduleManager
+     * @return array
      */
-    public function init(ModuleManager $moduleManager)
+    public function getServiceConfig()
     {
-        $moduleManager->getEventManager()->attach(ModuleEvent::EVENT_LOAD_MODULES_POST, array($this, 'onModulesLoaded'));
+        return array(
+            'factories' => array(
+                'at_admin_modules_service' => function ($sm) {
+                    return new Modules($sm->get('ModuleManager'));
+                }
+            )
+        );
     }
 
     /**
@@ -52,44 +58,19 @@ class Module implements AutoloaderProviderInterface
     {
         $application = $e->getApplication();
         $sm = $application->getServiceManager();
-        $mm = $sm->get('ModuleManager');
 
-        $enabledModules = $mm->getModules();
+        /** @var \Zend\Mvc\Router\Http\TreeRouteStack $router  */
+        $router = $application->getMvcEvent()->getRouter();
 
-        if (in_array('AtAdmin', $enabledModules)) {
-            /** @var \Zend\Mvc\Router\Http\TreeRouteStack $router  */
-            $router = $application->getMvcEvent()->getRouter();
-            $adminNavigation = $sm->get('admin_navigation');
-
-            $systemMenuItem = $adminNavigation->findOneById('system-page');
-
-            if ($systemMenuItem) {
-        /** @todo How to dinamically add route? */
-
-                $systemMenuItem->addPage(
-                    array(
-                       'label'       => 'Modules',
-                        'route'       => 'zfcadmin/system/modules',
-                        'router'      => $router,
-                    )
-                );
-            }
+        $systemMenuItem = $sm->get('admin_navigation')->findOneById('system-page');
+        if ($systemMenuItem) {
+            $systemMenuItem->addPage(
+                array(
+                    'label'  => 'Modules',
+                    'route'  => 'zfcadmin/system/modules',
+                    'router' => $router,
+                )
+            );
         }
-    }
-
-    /**
-     * @param \Zend\ModuleManager\ModuleEvent $e
-     */
-    public function onModulesLoaded(ModuleEvent $e)
-    {
-        self::$loadedModules = $e->getTarget()->getLoadedModules();
-    }
-
-    /**
-     * @return array
-     */
-    public static function getLoadedModules()
-    {
-        return self::$loadedModules;
     }
 }
