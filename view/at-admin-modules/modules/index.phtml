@@ -12,7 +12,7 @@
         <td><?php echo $data['version']; ?></td>
         <td><?php echo $data['localHash']; ?></td>
         <td><?php echo $data['remoteHash']; ?></td>
-        <td><?php echo $data['status']; ?></td>
+        <td><span class="label label-<?php if ($data['status'] == \AtAdminModules\Service\Module::STATUS_UP_TO_DATE): ?>success<?php else: ?>default<?php endif; ?>"><?php echo $data['status']; ?></span></td>
     </tr>
     <?php endforeach; ?>
 </table>

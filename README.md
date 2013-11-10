@@ -1,6 +1,6 @@
 # AtAdminModules
 
-Version 0.1.0
+Version 0.1.1-dev
 
 Modules management module for AtAdmin.
 

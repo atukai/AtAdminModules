@@ -4,13 +4,13 @@ namespace AtAdminModules\Service;
 
 use Zend\ModuleManager\ModuleManager;
 
-class Modules
+class Module
 {
-    const STATUS_GIT_BRANCH_DIVERGED = 'Your branch has diverged; %d ahead, %d behind';
-    const STATUS_GIT_BRANCH_AHEAD    = 'Your branch is %d ahead';
-    const STATUS_GIT_BRANCH_BEHIND   = 'Your branch is %d behind';
-    const STATUS_GIT_UP_TO_DATE      = 'Up to date';
-    const STATUS_GIT_NOT_TRACKED     = 'Module not tracked by git';
+    const STATUS_BRANCH_DIVERGED = 'Your branch has diverged; %d ahead, %d behind';
+    const STATUS_BRANCH_AHEAD    = 'Your branch is %d ahead';
+    const STATUS_BRANCH_BEHIND   = 'Your branch is %d behind';
+    const STATUS_GIT_NOT_TRACKED = 'Module not tracked by git';
+    const STATUS_UP_TO_DATE      = 'Up to date';
 
     /**
      * @var ModuleManager
@@ -94,13 +94,13 @@ class Modules
         $version = exec("cd $pathArg; git describe --long --tags --always");
 
         if ($ahead != 0 && $behind != 0) {
-            $status = sprintf(self::STATUS_GIT_BRANCH_DIVERGED, $ahead, $behind);
+            $status = sprintf(self::STATUS_BRANCH_DIVERGED, $ahead, $behind);
         } else if ($ahead == 0 && $behind != 0) {
-            $status = sprintf(self::STATUS_GIT_BRANCH_BEHIND, $behind);
+            $status = sprintf(self::STATUS_BRANCH_BEHIND, $behind);
         } else if ($ahead != 0 && $behind == 0) {
-            $status = sprintf(self::STATUS_GIT_BRANCH_AHEAD, $ahead);
+            $status = sprintf(self::STATUS_BRANCH_AHEAD, $ahead);
         } else {
-            $status = self::STATUS_GIT_UP_TO_DATE;
+            $status = self::STATUS_UP_TO_DATE;
         }
 
         return array(

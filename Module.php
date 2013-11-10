@@ -2,7 +2,7 @@
 
 namespace AtAdminModules;
 
-use AtAdminModules\Service\Modules;
+use AtAdminModules\Service\Module as ModuleService;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\ModuleManager\Feature\DependencyIndicatorInterface;
@@ -44,8 +44,8 @@ class Module implements
     {
         return array(
             'factories' => array(
-                'at_admin_modules_service' => function ($sm) {
-                    return new Modules($sm->get('ModuleManager'));
+                'at_admin_module_service' => function ($sm) {
+                    return new ModuleService($sm->get('ModuleManager'));
                 }
             )
         );

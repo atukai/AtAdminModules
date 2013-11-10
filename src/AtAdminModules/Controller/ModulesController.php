@@ -9,14 +9,15 @@ class ModulesController extends AbstractActionController
     public function indexAction()
     {
         $sl = $this->getServiceLocator();
+        $moduleService = $sl->get('atadmin_module_service');
 
-        $moduleVersions = array();
+        $modules = array();
         foreach ($sl->get('ModuleManager')->getLoadedModules() as $name => $module) {
-            $moduleVersions[$name] = $sl->get('atadmin_modules_service')->getModuleInfo($name);
+            $modules[$name] = $moduleService->getModuleInfo($name);
         }
 
         return array(
-            'modules' => $moduleVersions
+            'modules' => $modules
         );
     }
 }
